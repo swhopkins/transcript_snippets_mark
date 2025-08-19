@@ -1,4 +1,5 @@
 class Transcript < ApplicationRecord
-  # TODO: Add association to snippets
-  # TODO: Add validations
+  has_many :snippets
+
+  validates :title, presence: true
 end
