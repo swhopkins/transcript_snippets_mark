@@ -15,7 +15,7 @@ export function SnippetsTable({ transcripts }) {
     if (transcripts.length) {
       const options = transcripts.map(transcript => <option key={transcript.id} value={transcript.id}>{transcript.id} - {transcript.title}</option>);
       return (
-        <select onChange={handleChangeTranscript} value={transcriptId} disabled={loading ? 'disabled' : ''}>
+        <select onChange={handleChangeTranscript} value={transcriptId || ""} disabled={loading ? 'disabled' : ''}>
           <option value="" hidden>Select your transcript</option>
           {options}
         </select>
