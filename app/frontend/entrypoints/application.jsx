@@ -1,11 +1,23 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
-import { postTranscript, listSnippets, patchSnippet } from "../lib/api";
+import { listSnippets, patchSnippet } from "../lib/api";
+import { TranscriptUploadModal } from "../components/transcript_upload_modal";
 
 function App() {
   const [transcriptId, setTranscriptId] = useState("");
-  const [snippets, setSnippets] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [snippets, setSnippets]         = useState([]);
+  const [loading, setLoading]           = useState(false);
+
+
+  const launchUploadModal = () => {
+      document.body.classList.add('modal-active');
+  }
+
+
+  const closeUploadModal = () => {
+      document.body.classList.remove('modal-active');
+  }
+
 
   const handleFileUpload = async (file) => {
     // TODO: Implement file upload
@@ -13,14 +25,15 @@ function App() {
     // 2. Parse JSON
     // 3. Call postTranscript API
     // 4. Load snippets for the new transcript
-    console.log("File upload not implemented", file);
   };
+
 
   const handleSearch = async (query) => {
     // TODO: Implement search
     // Either filter locally or make API call with query param
     console.log("Search not implemented", query);
   };
+
 
   const handleToggleReview = async (snippetId, needsReview) => {
     // TODO: Implement toggle review status
@@ -29,16 +42,15 @@ function App() {
     console.log("Toggle review not implemented", snippetId, needsReview);
   };
 
+
   return (
-    <div className="container">
-      <h1>Transcript Snippets</h1>
-      
-      <div style={{ marginBottom: "20px" }}>
-        <input 
-          type="file" 
-          accept="application/json"
-          onChange={(e) => e.target.files && handleFileUpload(e.target.files[0])}
-        />
+    <>
+      <div className="container">
+      <div className="container-header">
+          <div className="container-header-controls">
+          <button type="button" onClick={launchUploadModal}>Upload Transcript</button>
+          </div>
+          <h1>Transcript Snippets</h1>
       </div>
 
       {/* TODO: Add search input */}
@@ -46,12 +58,15 @@ function App() {
       {/* TODO: Add loading states */}
       
       <div style={{ padding: "40px", textAlign: "center", color: "#666" }}>
-        <p>Upload a transcript JSON file to get started</p>
-        <p style={{ fontSize: "14px", marginTop: "10px" }}>
+          <p>Upload a transcript JSON file to get started</p>
+          <p style={{ fontSize: "14px", marginTop: "10px" }}>
           Expected format: {`{ id, title, snippets: [{id, start, end, text}] }`}
-        </p>
+          </p>
       </div>
-    </div>
+      </div>
+
+      <TranscriptUploadModal onClose={closeUploadModal}></TranscriptUploadModal>
+    </>
   );
 }
 

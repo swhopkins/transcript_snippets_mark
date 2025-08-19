@@ -14,16 +14,140 @@
  *= require_self
  */
 
+:root {
+  --button-color: #CCCCCC;
+  --button-hover-color: #AAAAAA;
+  --button-click-color: #999999;
+
+  --error-color: #CC0000;
+
+  --default-box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  --default-border-color: #CCCCCC;
+  --default-border-radius: 8px;
+  --default-container-padding: 24px;
+  --default-control-height: 30px;
+  --default-control-padding: 12px;
+}
+
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   margin: 24px;
   background: #f5f5f5;
 }
+
+
+/***************************************************************************************************
+* CONTAINERS
+***************************************************************************************************/
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  padding: var(--default-container-padding);
+}
+
+.container,
+.modal {
   background: white;
-  padding: 24px;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-radius: var(--default-border-radius);;
+  box-shadow: var(--default-box-shadow); }
+
+.container-header-controls {
+  float: right; }
+
+
+/***************************************************************************************************
+* MODALS
+***************************************************************************************************/
+body:after {
+  background-color: #333333;
+  bottom: 0px;
+  content: "";
+  left: 0px;
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+  right: 0px;
+  top: 0px;
+  transition: opacity .2s;
+  z-index: 1;
+}
+
+.modal {
+  border: 1px solid var(--default-border-color);
+  left: 50%;
+  margin-left: -200px;
+  opacity: 0;
+  position: absolute;
+  top: 20%;
+  transition: opacity .2s;
+  width: 400px;
+  z-index: 2;
+}
+
+.modal .close {
+  cursor: pointer;
+  float: right;
+}
+
+.modal-body,
+.modal-title {
+  padding: var(--default-container-padding);
+}
+
+.modal-title {
+  border-bottom: 1px solid var(--default-border-color);
+}
+
+.modal-body {
+  text-align: center; }
+
+body.modal-active .modal {
+  opacity: 1;
+}
+body.modal-active:after {
+  opacity: 0.8;
+}
+
+
+.modal .controls-container.valid-upload .upload-control,
+.modal .controls-container:not(.valid-upload) .submit-control {
+  display: none;
+}
+
+
+/***************************************************************************************************
+* BUTTONS
+***************************************************************************************************/
+button {
+  background-color: var(--button-color);
+  border-radius: var(--default-border-radius);
+  cursor: pointer;
+  line-height: var(--default-control-height);
+  padding: 0px var(--default-control-padding);
+  transition: background-color .2s;
+}
+
+button:hover {
+  background-color: var(--button-hover-color);
+}
+
+button:active {
+  background-color: var(--button-click-color);
+}
+
+button + button {
+  margin-left: 8px;
+}
+
+
+/***************************************************************************************************
+* MISC
+***************************************************************************************************/
+input[type="file"] {
+  display: none;
+}
+
+.error-msg {
+  color: var(--error-color);
+  padding: 8px 0px;
 }

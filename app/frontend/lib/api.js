@@ -5,6 +5,7 @@ export async function postTranscript(transcriptData) {
   // Send transcript data to create a new transcript with snippets
   // Return the created transcript ID
   
+    console.log(transcriptData);
   throw new Error("postTranscript not implemented");
 }
 
