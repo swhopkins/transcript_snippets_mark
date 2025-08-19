@@ -3,8 +3,10 @@ import { Modal } from './modal';
 import { postTranscript } from "../lib/api";
 
 export function TranscriptUploadModal({ children, onClose }) {
-  const [fileError, setFileError]       = useState(null);
-  const [dataToUpload, setDataToUpload] = useState(false);
+  const [dataToUpload, setDataToUpload]             = useState(false);
+  const [fileError,    setFileError]                = useState(null);
+  const [loading,      setLoading]                  = useState(false);
+  const [uploadedTranscript, setUploadedTranscript] = useState(false);
 
 
   const onUpload = (file) => {
@@ -23,24 +25,24 @@ export function TranscriptUploadModal({ children, onClose }) {
   const validateUpload = (dataStr) => {
     try {
       const data  = JSON.parse(dataStr);
-      const valid = data.every(validateRow);
-      setDataToUpload(data);
+      const valid = validateTranscription(data);
+      if (valid) setDataToUpload(data);
     } catch(err) {
       setFileError("Invalid JSON");
     }
   }
 
 
-  const validateRow = (row) => {
-    if (typeof(row.title) != 'string' || !row.title) {
+  const validateTranscription = (transcription) => {
+    if (typeof(transcription.title) != 'string' || !transcription.title) {
       setFileError("Missing title");
       return false;
     }
-    if (!Array.isArray(row.snippets) || row.snippets.length == 0) {
+    if (!Array.isArray(transcription.snippets) || transcription.snippets.length == 0) {
       setFileError("Missing snippets");
       return false;
     }
-    row.snippets.every(validateSnippet);
+    transcription.snippets.every(validateSnippet);
     return true;
   };
 
@@ -68,19 +70,32 @@ export function TranscriptUploadModal({ children, onClose }) {
   }
 
 
+  const SuccessDisplay = () => {
+    if (!uploadedTranscript) return;
+    return (<div className="success-msg">Uploaded transcript {uploadedTranscript.id}!</div>);
+  }
+
+
   async function uploadFile() {
-    await postTranscript(dataToUpload);
+    setLoading(true);
+    const transcript = await postTranscript(dataToUpload);
+    console.log(transcript);
+    setUploadedTranscript(transcript);
+    resetModal();
   }
 
 
   const resetModal = () => {
-    setDataToUpload(false);
+    setDataToUpload(null);
+    setLoading(false);
   }
 
 
   return (
     <Modal title="Upload Transcript" onClose={onClose}>
-      <div className={"controls-container" + (dataToUpload ? ' valid-upload' : '')}>
+      <div className={"controls-container" + (dataToUpload ? ' valid-upload' : '') + (loading ? ' loading' : '')}>
+
+
         <div className="upload-control">
           <div className="instructions">
             <p>Upload a transcript JSON file to get started</p>
@@ -95,14 +110,21 @@ export function TranscriptUploadModal({ children, onClose }) {
             onChange={(e) => e.target.files && onUpload(e.target.files[0])} />
 
           <FileErrorDisplay />
+          <SuccessDisplay />
         </div>
+
 
         <div className="submit-control">
           <div className="instructions">
-            <p>Upload {dataToUpload.length} transcript{dataToUpload.length == 1 ? '' : 's'}?</p>
+            <p>Upload transcript?</p>
           </div>
           <button onClick={uploadFile}>Submit</button>
           <button onClick={resetModal}>Cancel</button>
+        </div>
+
+
+        <div className="loading-indicator">
+            Loading... 
         </div>
       </div>
     </Modal>

@@ -4,9 +4,12 @@ export async function postTranscript(transcriptData) {
   // TODO: Implement POST /transcripts
   // Send transcript data to create a new transcript with snippets
   // Return the created transcript ID
-  
-    console.log(transcriptData);
-  throw new Error("postTranscript not implemented");
+  const response = await fetch("/transcripts", {
+    body: JSON.stringify({transcript: transcriptData}),
+    headers: {'Content-Type':'application/json'},
+    method: "POST"
+  });
+  return await response.json();
 }
 
 export async function listSnippets(transcriptId, query) {

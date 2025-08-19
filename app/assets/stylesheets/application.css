@@ -21,6 +21,7 @@
 
   --secondary-text-color: #666666;
   --error-color: #CC0000;
+  --success-color: #00CC00;
 
   --default-box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   --default-border-color: #CCCCCC;
@@ -111,7 +112,10 @@ body.modal-active:after {
 
 
 .modal .controls-container.valid-upload .upload-control,
-.modal .controls-container:not(.valid-upload) .submit-control {
+.modal .controls-container:not(.valid-upload) .submit-control,
+.modal .controls-container:not(.loading) .loading-indicator,
+.modal .controls-container.loading .submit-control,
+.modal .controls-container.loading .upload-control {
   display: none;
 }
 
@@ -148,10 +152,18 @@ input[type="file"] {
   display: none;
 }
 
-.error-msg {
-  color: var(--error-color);
+.error-msg,
+.success-msg {
   font-size: 12px;
   padding: 8px 0px;
+}
+
+.error-msg {
+  color: var(--error-color);
+}
+
+.success-msg {
+  color: var(--success-color);
 }
 
 .instructions p {
