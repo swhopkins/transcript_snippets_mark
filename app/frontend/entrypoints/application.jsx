@@ -46,23 +46,17 @@ function App() {
   return (
     <>
       <div className="container">
-      <div className="container-header">
+        <div className="container-header">
           <div className="container-header-controls">
           <button type="button" onClick={launchUploadModal}>Upload Transcript</button>
           </div>
           <h1>Transcript Snippets</h1>
-      </div>
+        </div>
 
       {/* TODO: Add search input */}
       {/* TODO: Add snippets list */}
       {/* TODO: Add loading states */}
       
-      <div style={{ padding: "40px", textAlign: "center", color: "#666" }}>
-          <p>Upload a transcript JSON file to get started</p>
-          <p style={{ fontSize: "14px", marginTop: "10px" }}>
-          Expected format: {`{ id, title, snippets: [{id, start, end, text}] }`}
-          </p>
-      </div>
       </div>
 
       <TranscriptUploadModal onClose={closeUploadModal}></TranscriptUploadModal>

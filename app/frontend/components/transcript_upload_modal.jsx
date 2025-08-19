@@ -82,6 +82,11 @@ export function TranscriptUploadModal({ children, onClose }) {
     <Modal title="Upload Transcript" onClose={onClose}>
       <div className={"controls-container" + (dataToUpload ? ' valid-upload' : '')}>
         <div className="upload-control">
+          <div className="instructions">
+            <p>Upload a transcript JSON file to get started</p>
+            <p>Expected format: {`{ id, title, snippets: [{id, start, end, text}] }`}</p>
+          </div>
+
           <button onClick={(e) => document.getElementById('upload-transcript-input').click()}>Select a File</button>
           <input 
             id="upload-transcript-input"
@@ -93,6 +98,9 @@ export function TranscriptUploadModal({ children, onClose }) {
         </div>
 
         <div className="submit-control">
+          <div className="instructions">
+            <p>Upload {dataToUpload.length} transcript{dataToUpload.length == 1 ? '' : 's'}?</p>
+          </div>
           <button onClick={uploadFile}>Submit</button>
           <button onClick={resetModal}>Cancel</button>
         </div>
