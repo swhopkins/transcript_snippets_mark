@@ -10,7 +10,7 @@ class TranscriptsController < ApplicationController
 
     transcript = create_transcript
     
-    render json: { id: transcript.id }, status: :ok unless performed?
+    render json: { id: transcript.id, transcript: transcript.as_json}, status: :ok unless performed?
   end
 
 

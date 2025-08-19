@@ -4,13 +4,15 @@ export async function postTranscript(transcriptData) {
   // TODO: Implement POST /transcripts
   // Send transcript data to create a new transcript with snippets
   // Return the created transcript ID
-  const response = await fetch("/transcripts", {
+  const response = await fetchAPI("/transcripts", {
     body: JSON.stringify({transcript: transcriptData}),
     headers: {'Content-Type':'application/json'},
     method: "POST"
   });
-  return await response.json();
+
+  return response.transcript;
 }
+
 
 export async function listSnippets(transcriptId, query) {
   // TODO: Implement GET /transcripts/:id/snippets
@@ -21,6 +23,7 @@ export async function listSnippets(transcriptId, query) {
   throw new Error("listSnippets not implemented");
 }
 
+
 export async function patchSnippet(snippetId, updates) {
   // TODO: Implement PATCH /snippets/:id
   // Update snippet's needs_review status
@@ -28,6 +31,7 @@ export async function patchSnippet(snippetId, updates) {
   
   throw new Error("patchSnippet not implemented");
 }
+
 
 // Helper function for making fetch requests (provided for convenience)
 async function fetchAPI(url, options = {}) {
