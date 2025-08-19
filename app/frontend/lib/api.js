@@ -20,12 +20,12 @@ export async function listTranscripts() {
 
 
 export async function listSnippets(transcriptId, query) {
-  // TODO: Implement GET /transcripts/:id/snippets
-  // Fetch snippets for a transcript
-  // Include optional search query parameter
-  // Return array of snippet objects
-  
-  const response = await fetchAPI(`/transcripts/${transcriptId}/snippets`, {
+  let endpoint =  `/transcripts/${transcriptId}/snippets`;
+  if (query) {
+    endpoint = `${endpoint}?${new URLSearchParams({query: query})}`;
+  }
+
+  const response = await fetchAPI(endpoint, {
     method: "GET"
   });
 

@@ -3,17 +3,20 @@ import { listSnippets, patchSnippet, listTranscripts } from "../lib/api";
 
 
 export function SnippetsTable({ transcripts }) {
+  const [activeQuery,  setActiveQuery]  = useState("");
   const [loading,      setLoading]      = useState(false);
   const [snippets,     setSnippets]     = useState([]);
-  const [transcriptId, setTranscriptId] = useState([]);
+  const [transcriptId, setTranscriptId] = useState(null);
+  let   searchTimer                     = null;
+  const searchDelay                     = 500;
 
 
   function TranscriptSelector({ transcripts }) {
     if (transcripts.length) {
       const options = transcripts.map(transcript => <option key={transcript.id} value={transcript.id}>{transcript.id} - {transcript.title}</option>);
       return (
-        <select onChange={changeTranscript} defaultValue={transcriptId} disabled={loading ? 'disabled' : ''}>
-          <option value="" disabled>Select your transcript</option>
+        <select onChange={handleChangeTranscript} value={transcriptId} disabled={loading ? 'disabled' : ''}>
+          <option value="" hidden>Select your transcript</option>
           {options}
         </select>
       );
@@ -25,6 +28,14 @@ export function SnippetsTable({ transcripts }) {
         <p>Create a transcript to begin</p>
       </div>
     );
+  }
+
+
+  function SnippetSearch() {
+    if (!transcriptId) return;
+    return (
+      <input type="text" id="snippet-search" placeholder="Search snippets..." onChange={handleSnippetSearchChange} defaultValue={activeQuery} />
+    )
   }
 
 
@@ -77,15 +88,36 @@ export function SnippetsTable({ transcripts }) {
   }
 
 
-  const changeTranscript = (e) => {
+
+  const handleSnippetSearchChange = (e) => {
+    if (searchTimer) clearTimeout(searchTimer);
+    searchTimer = setTimeout(performSnippetSearch, searchDelay);
+  }
+
+
+  const performSnippetSearch = () => {
+    fetchSnippets(transcriptId);
+  }
+
+
+  const handleChangeTranscript = (e) => {
     const _transcriptId = e.target.value;
-    setLoading(true);
     setTranscriptId(_transcriptId);
-    listSnippets(_transcriptId).then(transcriptSnippets => {
+    fetchSnippets(_transcriptId);
+  };
+
+
+  const fetchSnippets = (_transcriptId) => {
+    const searchInput = document.getElementById('snippet-search');
+    let query;
+    if (searchInput) query = searchInput.value;
+    setLoading(true);
+    listSnippets(_transcriptId, query).then(transcriptSnippets => {
       setSnippets(transcriptSnippets);
+      setActiveQuery(query);
       setLoading(false);
     });
-  };
+  }
 
 
   return (
@@ -94,6 +126,7 @@ export function SnippetsTable({ transcripts }) {
         <div className="transcript-selector">
           <TranscriptSelector transcripts={transcripts}/>
         </div>
+        <SnippetSearch />
       </div>
 
       <Snippets />

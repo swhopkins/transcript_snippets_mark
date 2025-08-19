@@ -38,21 +38,9 @@ function App() {
   }
 
 
-  const handleSearch = async (query) => {
-    // TODO: Implement search
-    // Either filter locally or make API call with query param
-    console.log("Search not implemented", query);
-  };
-
-
-  const handleToggleReview = async (snippetId, needsReview) => {
-    // TODO: Implement toggle review status
-    // 1. Call patchSnippet API
-    // 2. Update local state
-    console.log("Toggle review not implemented", snippetId, needsReview);
-  };
-
   if (!transcriptsLoaded) populateTranscripts();
+
+
   return (
     <>
       <div className="container">

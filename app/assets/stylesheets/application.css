@@ -126,14 +126,20 @@ body.modal-active:after {
 * CONTROLS
 ***************************************************************************************************/
 button,
+input[type="text"],
 select {
-  background-color: var(--button-color);
+  border: 1px solid var(--default-border-color);
   border-radius: var(--default-border-radius);
   box-sizing: border-box;
-  cursor: pointer;
   height: calc(var(--default-control-height) + 2px);
   line-height: var(--default-control-height);
   padding: 0px var(--default-control-padding);
+}
+
+button,
+select {
+  background-color: var(--button-color);
+  cursor: pointer;
   transition: background-color .2s;
 }
 
@@ -191,7 +197,12 @@ input[type="checkbox"] {
 }
 
 #snippets-table table tbody tr:nth-child(odd){
-    background-color: #EEEEEE;
+  background-color: #EEEEEE;
+}
+
+.transcript-selector {
+  display: inline-block;
+  margin-right: 8px;
 }
 
 

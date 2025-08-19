@@ -5,13 +5,18 @@ class SnippetsController < ApplicationController
   # Optional query param: ?query=searchterm
   # Return: Array of snippet objects with id, start, end, text, needs_review
   def index
-    transcript = Transcript.find(params[:transcript_id]);
-    snippets   = transcript.snippets.sort_by(&:start)
-    
-    puts snippets.map(&:as_json);
+    snippets = search_snippets
     render json: {snippets: snippets.map(&:as_json)}, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: {}, status: :not_found
+  end
+
+
+  private def search_snippets
+    snippets = Snippet.where(:transcript_id => params[:transcript_id])
+    snippets = snippets.search(params[:query]) if params[:query].present?
+
+    snippets.order("start asc").to_a
   end
 
 
