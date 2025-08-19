@@ -8,7 +8,6 @@ class Transcript < ApplicationRecord
     {
       id:    id,
       title: title,
-      snippets: snippets
     }
   end
 end

@@ -14,6 +14,12 @@ class TranscriptsController < ApplicationController
   end
 
 
+  def index
+    transcripts = Transcript.order("id asc").all
+    render json: { transcripts: transcripts.map(&:as_json) }, status: :ok
+  end
+
+
   private def create_transcript
     render json: {error: "Missing transcript"}, status: :bad_request and return if transcript_params.blank?
     render json: {error: "Missing snippets"},   status: :bad_request and return if snippets_params.blank?

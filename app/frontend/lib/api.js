@@ -1,9 +1,6 @@
 // API client functions for interacting with Rails backend
 
 export async function postTranscript(transcriptData) {
-  // TODO: Implement POST /transcripts
-  // Send transcript data to create a new transcript with snippets
-  // Return the created transcript ID
   const response = await fetchAPI("/transcripts", {
     body: JSON.stringify({transcript: transcriptData}),
     headers: {'Content-Type':'application/json'},
@@ -11,6 +8,16 @@ export async function postTranscript(transcriptData) {
   });
 
   return response.transcript;
+}
+
+
+export async function listTranscripts() {
+  const response = await fetchAPI("/transcripts", {
+    headers: {'Content-Type':'application/json'},
+    method: "GET"
+  });
+
+  return response.transcripts;
 }
 
 

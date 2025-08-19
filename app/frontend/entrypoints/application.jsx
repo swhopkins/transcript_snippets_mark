@@ -1,31 +1,38 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
-import { listSnippets, patchSnippet } from "../lib/api";
+import { listSnippets, patchSnippet, listTranscripts } from "../lib/api";
+import { SnippetsTable } from "../components/snippets_table";
 import { TranscriptUploadModal } from "../components/transcript_upload_modal";
 
 function App() {
-  const [transcriptId, setTranscriptId] = useState("");
-  const [snippets, setSnippets]         = useState([]);
-  const [loading, setLoading]           = useState(false);
+  const [loading,      setLoading]                 = useState(false);
+  const [snippets,     setSnippets]                = useState([]);
+  const [transcriptId, setTranscriptId]            = useState("");
+  const [transcripts,  setTranscripts]             = useState([]);
+  const [transcriptsLoaded, setTranscriptsLoaded]  = useState(false);
 
 
   const launchUploadModal = () => {
-      document.body.classList.add('modal-active');
+    document.body.classList.add('modal-active');
   }
 
 
   const closeUploadModal = () => {
-      document.body.classList.remove('modal-active');
+    document.body.classList.remove('modal-active');
   }
 
 
-  const handleFileUpload = async (file) => {
-    // TODO: Implement file upload
-    // 1. Read the file content
-    // 2. Parse JSON
-    // 3. Call postTranscript API
-    // 4. Load snippets for the new transcript
+  const handleTranscriptCreated = (transcript) => {
+    transcripts.push(transcript);
+    setTranscripts(transcripts);
   };
+
+
+  const populateTranscripts = async () => {
+    const allTranscripts = await listTranscripts();
+    setTranscriptsLoaded(true);
+    setTranscripts(allTranscripts);
+  }
 
 
   const handleSearch = async (query) => {
@@ -42,6 +49,7 @@ function App() {
     console.log("Toggle review not implemented", snippetId, needsReview);
   };
 
+  if (!transcriptsLoaded) populateTranscripts();
 
   return (
     <>
@@ -52,6 +60,8 @@ function App() {
           </div>
           <h1>Transcript Snippets</h1>
         </div>
+
+        <SnippetsTable transcripts={transcripts} />
 
       {/* TODO: Add search input */}
       {/* TODO: Add snippets list */}
