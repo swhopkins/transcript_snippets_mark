@@ -4,7 +4,9 @@ class Snippet < ApplicationRecord
   validates :start, presence: true, numericality: {greater_than_or_equal_to: 0}
   validates :end,   presence: true, numericality: {greater_than_or_equal_to: 0}
   validates :text,  presence: true
-  # TODO: Add search scope for text searching
+
+
+  scope :search, -> (query) { where("lower(text) like ?", "%#{query}%") }
 
 
   def serializable_hash(options=nil)
