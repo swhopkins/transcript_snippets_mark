@@ -5,25 +5,29 @@ class SnippetsController < ApplicationController
   # Optional query param: ?query=searchterm
   # Return: Array of snippet objects with id, start, end, text, needs_review
   def index
-    # TODO: Implement snippet listing
-    # 1. Find snippets for the given transcript_id
-    # 2. Apply search filter if query param is present
-    # 3. Order by start time
-    # 4. Return as JSON
+    transcript = Transcript.find(params[:transcript_id]);
+    snippets   = transcript.snippets.sort_by(&:start)
     
-    render json: []
+    puts snippets.map(&:as_json);
+    render json: {snippets: snippets.map(&:as_json)}, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: {}, status: :not_found
   end
+
 
   # PATCH /snippets/:id
   # Expected payload: { needs_review: true/false }
   # Return: { id, needs_review }
   def update
-    # TODO: Implement snippet update
-    # 1. Find the snippet by ID
-    # 2. Update the needs_review field
-    # 3. Handle not found errors
-    # 4. Return updated snippet data
+    render json: {error: "Missing snippet data"}, status: :bad_request and return if params[:snippet].blank?
+    render json: {error: "Missing snippet data"}, status: :bad_request and return unless params[:snippet].has_key?(:needs_review)
+
+    snippet              = Snippet.find(params[:id]);
+    snippet.needs_review = params[:snippet][:needs_review]
+    snippet.save
     
-    render json: { error: "Not implemented" }, status: :not_implemented
+    render json: {id: snippet.id, needs_review: snippet.needs_review?, snippet: snippet.as_json}, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: {}, status: :not_found
   end
 end

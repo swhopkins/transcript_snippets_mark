@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import ReactDOM from "react-dom/client";
-import { listSnippets, patchSnippet, listTranscripts } from "../lib/api";
+import { listTranscripts } from "../lib/api";
 import { SnippetsTable } from "../components/snippets_table";
 import { TranscriptUploadModal } from "../components/transcript_upload_modal";
 
 function App() {
   const [loading,      setLoading]                 = useState(false);
-  const [snippets,     setSnippets]                = useState([]);
-  const [transcriptId, setTranscriptId]            = useState("");
   const [transcripts,  setTranscripts]             = useState([]);
   const [transcriptsLoaded, setTranscriptsLoaded]  = useState(false);
+
+  // I'm using this to force a rerender of the view when there's a new transcript added to the selector
+  // I'm sure there's a better way to do this, but I'm still honing my React chops
+  const [, forceUpdate]                            = useReducer(x => x + 1, 0);
 
 
   const launchUploadModal = () => {
@@ -25,6 +27,7 @@ function App() {
   const handleTranscriptCreated = (transcript) => {
     transcripts.push(transcript);
     setTranscripts(transcripts);
+    forceUpdate();
   };
 
 
@@ -50,7 +53,6 @@ function App() {
   };
 
   if (!transcriptsLoaded) populateTranscripts();
-
   return (
     <>
       <div className="container">
@@ -69,7 +71,7 @@ function App() {
       
       </div>
 
-      <TranscriptUploadModal onClose={closeUploadModal}></TranscriptUploadModal>
+      <TranscriptUploadModal onCreate={handleTranscriptCreated} onClose={closeUploadModal}></TranscriptUploadModal>
     </>
   );
 }

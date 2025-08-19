@@ -3,7 +3,6 @@
 export async function postTranscript(transcriptData) {
   const response = await fetchAPI("/transcripts", {
     body: JSON.stringify({transcript: transcriptData}),
-    headers: {'Content-Type':'application/json'},
     method: "POST"
   });
 
@@ -13,7 +12,6 @@ export async function postTranscript(transcriptData) {
 
 export async function listTranscripts() {
   const response = await fetchAPI("/transcripts", {
-    headers: {'Content-Type':'application/json'},
     method: "GET"
   });
 
@@ -27,16 +25,21 @@ export async function listSnippets(transcriptId, query) {
   // Include optional search query parameter
   // Return array of snippet objects
   
-  throw new Error("listSnippets not implemented");
+  const response = await fetchAPI(`/transcripts/${transcriptId}/snippets`, {
+    method: "GET"
+  });
+
+  return response.snippets;
 }
 
 
 export async function patchSnippet(snippetId, updates) {
-  // TODO: Implement PATCH /snippets/:id
-  // Update snippet's needs_review status
-  // Return updated snippet data
-  
-  throw new Error("patchSnippet not implemented");
+  const response = await fetchAPI(`/snippets/${snippetId}`, {
+    body: JSON.stringify({snippet: updates}),
+    method: "PATCH"
+  });
+
+  return response.snippet;
 }
 
 

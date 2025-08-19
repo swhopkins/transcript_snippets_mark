@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal } from './modal';
 import { postTranscript } from "../lib/api";
 
-export function TranscriptUploadModal({ children, onClose }) {
+export function TranscriptUploadModal({ children, onClose, onCreate }) {
   const [dataToUpload, setDataToUpload]             = useState(false);
   const [fileError,    setFileError]                = useState(null);
   const [loading,      setLoading]                  = useState(false);
@@ -79,7 +79,7 @@ export function TranscriptUploadModal({ children, onClose }) {
   async function uploadFile() {
     setLoading(true);
     const transcript = await postTranscript(dataToUpload);
-    console.log(transcript);
+    onCreate(transcript);
     setUploadedTranscript(transcript);
     resetModal();
   }

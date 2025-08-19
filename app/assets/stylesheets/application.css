@@ -79,6 +79,7 @@ body:after {
   left: 50%;
   margin-left: -200px;
   opacity: 0;
+  pointer-events: none;
   position: absolute;
   top: 20%;
   transition: opacity .2s;
@@ -105,6 +106,7 @@ body:after {
 
 body.modal-active .modal {
   opacity: 1;
+  pointer-events: initial;
 }
 body.modal-active:after {
   opacity: 0.8;
@@ -121,21 +123,26 @@ body.modal-active:after {
 
 
 /***************************************************************************************************
-* BUTTONS
+* CONTROLS
 ***************************************************************************************************/
-button {
+button,
+select {
   background-color: var(--button-color);
   border-radius: var(--default-border-radius);
+  box-sizing: border-box;
   cursor: pointer;
+  height: calc(var(--default-control-height) + 2px);
   line-height: var(--default-control-height);
   padding: 0px var(--default-control-padding);
   transition: background-color .2s;
 }
 
-button:hover {
+button:hover,
+select:hover {
   background-color: var(--button-hover-color);
 }
 
+button:active,
 button:active {
   background-color: var(--button-click-color);
 }
@@ -144,21 +151,53 @@ button + button {
   margin-left: 8px;
 }
 
+select {
+  -webkit-appearance: menulist-button;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+input[type="checkbox"] {
+  cursor: pointer;
+}
+
 
 /***************************************************************************************************
 * SNIPPETS TABLE
 ***************************************************************************************************/
-#snippets-table {
+#snippets-table table {
+  border: 1px solid var(--default-border-color);
+  border-spacing: 0;
+  border-radius: var(--default-border-radius);
+  border-collapse: separate;
+  margin-top: 16px;
+  width: 100%;
+}
+
+#snippets-table table td,
+#snippets-table table th {
+  padding: 8px 16px; }
+
+#snippets-table table th {
+  background-color: #CCCCCC;
+  font-weight: normal;
+  text-align: left;
+}
+
+#snippets-table table td {
+  color: var(--secondary-text-color);
+}
+
+#snippets-table table tbody tr:nth-child(odd){
+    background-color: #EEEEEE;
 }
 
 
 /***************************************************************************************************
 * MISC
 ***************************************************************************************************/
-input[type="file"] {
-  display: none;
-}
-
 .error-msg,
 .success-msg {
   font-size: 12px;
