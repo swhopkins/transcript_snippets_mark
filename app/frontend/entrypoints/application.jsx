@@ -1,57 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import ReactDOM from "react-dom/client";
-import { postTranscript, listSnippets, patchSnippet } from "../lib/api";
+import { listTranscripts } from "../lib/api";
+import { SnippetsTable } from "../components/snippets_table";
+import { TranscriptUploadModal } from "../components/transcript_upload_modal";
 
 function App() {
-  const [transcriptId, setTranscriptId] = useState("");
-  const [snippets, setSnippets] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading,      setLoading]                 = useState(false);
+  const [transcripts,  setTranscripts]             = useState([]);
+  const [transcriptsLoaded, setTranscriptsLoaded]  = useState(false);
 
-  const handleFileUpload = async (file) => {
-    // TODO: Implement file upload
-    // 1. Read the file content
-    // 2. Parse JSON
-    // 3. Call postTranscript API
-    // 4. Load snippets for the new transcript
-    console.log("File upload not implemented", file);
+  // I'm using this to force a rerender of the view when there's a new transcript added to the selector
+  // I'm sure there's a better way to do this, but I'm still honing my React chops
+  const [, forceUpdate]                            = useReducer(x => x + 1, 0);
+
+
+  const launchUploadModal = () => {
+    document.body.classList.add('modal-active');
+  }
+
+
+  const closeUploadModal = () => {
+    document.body.classList.remove('modal-active');
+  }
+
+
+  const handleTranscriptCreated = (transcript) => {
+    transcripts.push(transcript);
+    setTranscripts(transcripts);
+    forceUpdate();
   };
 
-  const handleSearch = async (query) => {
-    // TODO: Implement search
-    // Either filter locally or make API call with query param
-    console.log("Search not implemented", query);
-  };
 
-  const handleToggleReview = async (snippetId, needsReview) => {
-    // TODO: Implement toggle review status
-    // 1. Call patchSnippet API
-    // 2. Update local state
-    console.log("Toggle review not implemented", snippetId, needsReview);
-  };
+  const populateTranscripts = async () => {
+    const allTranscripts = await listTranscripts();
+    setTranscriptsLoaded(true);
+    setTranscripts(allTranscripts);
+  }
+
+
+  if (!transcriptsLoaded) populateTranscripts();
+
 
   return (
-    <div className="container">
-      <h1>Transcript Snippets</h1>
-      
-      <div style={{ marginBottom: "20px" }}>
-        <input 
-          type="file" 
-          accept="application/json"
-          onChange={(e) => e.target.files && handleFileUpload(e.target.files[0])}
-        />
-      </div>
+    <>
+      <div className="container">
+        <div className="container-header">
+          <div className="container-header-controls">
+          <button type="button" onClick={launchUploadModal}>Upload Transcript</button>
+          </div>
+          <h1>Transcript Snippets</h1>
+        </div>
+
+        <SnippetsTable transcripts={transcripts} />
 
       {/* TODO: Add search input */}
       {/* TODO: Add snippets list */}
       {/* TODO: Add loading states */}
       
-      <div style={{ padding: "40px", textAlign: "center", color: "#666" }}>
-        <p>Upload a transcript JSON file to get started</p>
-        <p style={{ fontSize: "14px", marginTop: "10px" }}>
-          Expected format: {`{ id, title, snippets: [{id, start, end, text}] }`}
-        </p>
       </div>
-    </div>
+
+      <TranscriptUploadModal onCreate={handleTranscriptCreated} onClose={closeUploadModal}></TranscriptUploadModal>
+    </>
   );
 }
 
