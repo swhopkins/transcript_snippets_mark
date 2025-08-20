@@ -9,6 +9,9 @@ export function TranscriptUploadModal({ children, onClose, onCreate }) {
   const [uploadedTranscript, setUploadedTranscript] = useState(false);
 
 
+/***************************************************************************************************
+* FILE UPLOADING
+***************************************************************************************************/
   const onUpload = (file) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -22,6 +25,18 @@ export function TranscriptUploadModal({ children, onClose, onCreate }) {
   }
 
 
+  async function uploadFile() {
+    setLoading(true);
+    const transcript = await postTranscript(dataToUpload);
+    onCreate(transcript);
+    setUploadedTranscript(transcript);
+    resetModal();
+  }
+
+
+/***************************************************************************************************
+* VALIDATION
+***************************************************************************************************/
   const validateUpload = (dataStr) => {
     try {
       const data  = JSON.parse(dataStr);
@@ -64,6 +79,9 @@ export function TranscriptUploadModal({ children, onClose, onCreate }) {
   }
 
 
+/***************************************************************************************************
+* UI FEEDBACK
+***************************************************************************************************/
   const FileErrorDisplay = () => {
     if (!fileError) return;
     return (<div className="error-msg">{fileError}</div>);
@@ -76,21 +94,18 @@ export function TranscriptUploadModal({ children, onClose, onCreate }) {
   }
 
 
-  async function uploadFile() {
-    setLoading(true);
-    const transcript = await postTranscript(dataToUpload);
-    onCreate(transcript);
-    setUploadedTranscript(transcript);
-    resetModal();
-  }
-
-
+/***************************************************************************************************
+* MISC
+***************************************************************************************************/
   const resetModal = () => {
     setDataToUpload(null);
     setLoading(false);
   }
 
 
+/***************************************************************************************************
+* COMPONENT TEMPLATE
+***************************************************************************************************/
   return (
     <Modal title="Upload Transcript" onClose={onClose}>
       <div className={"controls-container" + (dataToUpload ? ' valid-upload' : '') + (loading ? ' loading' : '')}>
