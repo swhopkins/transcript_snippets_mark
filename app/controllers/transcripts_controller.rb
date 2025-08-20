@@ -2,12 +2,6 @@ class TranscriptsController < ApplicationController
   protect_from_forgery with: :null_session
 
   def create
-    # TODO: Implement transcript import
-    # 1. Parse and validate the incoming JSON
-    # 2. Create transcript record
-    # 3. Create associated snippet records
-    # 4. Handle errors appropriately
-
     transcript = create_transcript
     
     render json: { id: transcript.id, transcript: transcript.as_json}, status: :ok unless performed?
@@ -19,7 +13,9 @@ class TranscriptsController < ApplicationController
     render json: { transcripts: transcripts.map(&:as_json) }, status: :ok
   end
 
-
+####################################################################################################
+# TRANSCRIPT CREATION HELPERS
+####################################################################################################
   private def create_transcript
     render json: {error: "Missing transcript"}, status: :bad_request and return if transcript_params.blank?
     render json: {error: "Missing snippets"},   status: :bad_request and return if snippets_params.blank?

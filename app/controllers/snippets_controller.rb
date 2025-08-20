@@ -12,14 +12,6 @@ class SnippetsController < ApplicationController
   end
 
 
-  private def search_snippets
-    snippets = Snippet.where(:transcript_id => params[:transcript_id])
-    snippets = snippets.search(params[:query]) if params[:query].present?
-
-    snippets.order("start asc").to_a
-  end
-
-
   # PATCH /snippets/:id
   # Expected payload: { needs_review: true/false }
   # Return: { id, needs_review }
@@ -34,5 +26,16 @@ class SnippetsController < ApplicationController
     render json: {id: snippet.id, needs_review: snippet.needs_review?, snippet: snippet.as_json}, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: {}, status: :not_found
+  end
+
+
+####################################################################################################
+# SEARCH HELPERS
+####################################################################################################
+  private def search_snippets
+    snippets = Snippet.where(:transcript_id => params[:transcript_id])
+    snippets = snippets.search(params[:query]) if params[:query].present?
+
+    snippets.order("start asc").to_a
   end
 end
